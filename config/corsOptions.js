@@ -4,6 +4,6 @@ const allowedOrigins = [
     'https://www.ali-reza.dev',
 ]
 
-const corsOptions = { origin: allowedOrigins, credentials: true };
+const corsOptions = { origin: 'https://www.ali-reza.dev', credentials: true };
 
 module.exports = corsOptions;
