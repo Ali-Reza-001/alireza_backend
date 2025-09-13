@@ -8,13 +8,15 @@ const mongoose = require('mongoose');
 const projectsRouter = require('./routes/project.js');
 const loginController = require('./controller/loginController.js');
 const registerController = require('./controller/registerController.js');
+const corsOptions = require('./config/corsOptions.js');
+
 
 require('dotenv').config();
 
 
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: 'https://ali-reza.dev', credentials: true }));
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use((req, res, next) => logger(req, res, next));
