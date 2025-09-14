@@ -1,7 +1,8 @@
-// corsOptions.js
+
 const allowedOrigins = [
   'https://ali-reza.dev',
   'https://www.ali-reza.dev',
+  'http://localhost:5173',
 ];
 
 const corsOptions = {
@@ -13,7 +14,7 @@ const corsOptions = {
     }
   },
   credentials: true,
-  optionsSuccessStatus: 200, // For legacy browsers
+  optionsSuccessStatus: 200,
 };
 
 module.exports = corsOptions;

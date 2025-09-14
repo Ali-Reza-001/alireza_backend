@@ -9,6 +9,7 @@ const projectsRouter = require('./routes/project.js');
 const loginController = require('./controller/loginController.js');
 const registerController = require('./controller/registerController.js');
 const corsOptions = require('./config/corsOptions.js');
+const logs = require('./middleware/logs.js');
 
 
 require('dotenv').config();
@@ -38,6 +39,8 @@ app.post('/register', registerController);
 app.post('/login', loginController);
 
 app.use('/api/project', projectsRouter);
+
+app.get('/api/logs', logs);
 
 app.get('/health', (req, res) => {
   res.send('Backend is alive 🔥');

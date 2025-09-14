@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const logDir = path.join(__dirname, 'data');
+const logDir = path.join(__dirname, '..', 'data');
 const logFilePath = path.join(logDir, 'logs.jsonl');
 
 const logger = (req, res, next) => {
