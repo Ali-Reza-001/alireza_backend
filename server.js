@@ -11,7 +11,7 @@ const registerController = require('./controller/registerController.js');
 const corsOptions = require('./config/corsOptions.js');
 const logs = require('./middleware/logs.js');
 
-
+app.set('trust proxy', true);
 require('dotenv').config();
 
 
