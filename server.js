@@ -10,6 +10,7 @@ const loginController = require('./controller/loginController.js');
 const registerController = require('./controller/registerController.js');
 const corsOptions = require('./config/corsOptions.js');
 const logs = require('./middleware/logs.js');
+const users = require('./middleware/users.js');
 
 app.set('trust proxy', true);
 require('dotenv').config();
@@ -41,6 +42,8 @@ app.post('/login', loginController);
 app.use('/api/project', projectsRouter);
 
 app.get('/api/logs', logs);
+
+app.get('/api/users', users);
 
 app.get('/health', (req, res) => {
   res.send('Backend is alive 🔥');
