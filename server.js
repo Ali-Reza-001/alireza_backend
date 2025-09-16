@@ -19,13 +19,21 @@ require('dotenv').config();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // Handles preflight
 app.use(express.json());
 
 app.use((req, res, next) => logger(req, res, next));
 
 
 connectDB();
+
+
+app.get('/', (req, res) => {
+  if (req.headers.accept?.includes('text/html')) {
+    res.redirect('https://ali-reza.dev');
+  } else {
+    res.status(200).send('API root');
+  }
+});
 
 
 
