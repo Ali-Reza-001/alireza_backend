@@ -29,8 +29,8 @@ const registerController = async (req, res) => {
   const accessToken = jwt.sign({ email: email }, JWT_ACCESS_TOKEN, { expiresIn: '15m' });
   const refreshToken = jwt.sign({ email: email }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
 
-  // const user = new User({ username, email, password: hashed, ip, refresh: refreshToken });
-  // await user.save();
+  const user = new User({ username, email, password: hashed, ip, refresh: refreshToken });
+  await user.save();
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
