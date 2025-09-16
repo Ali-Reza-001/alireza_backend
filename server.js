@@ -28,8 +28,12 @@ app.use((req, res, next) => logger(req, res, next));
 connectDB();
 
 
-app.get('/', async (req, res) => {
-    res.redirect('https://ali-reza.dev')
+app.get('/', (req, res) => {
+  if (req.headers.accept?.includes('text/html')) {
+    res.redirect('https://ali-reza.dev');
+  } else {
+    res.status(200).send('API root');
+  }
 });
 
 
