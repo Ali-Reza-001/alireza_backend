@@ -28,15 +28,6 @@ app.use((req, res, next) => logger(req, res, next));
 connectDB();
 
 
-app.get('/', (req, res) => {
-  if (req.headers.accept?.includes('text/html')) {
-    res.redirect('https://ali-reza.dev');
-  } else {
-    res.status(200).send('API root');
-  }
-});
-
-
 
 // Register
 app.post('/register', registerController);
