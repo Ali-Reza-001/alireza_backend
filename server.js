@@ -5,15 +5,16 @@ const logger = require('./middleware/logger')
 const cors = require('cors');
 const mongoose = require('mongoose');
 
+app.set('trust proxy', true);
+require('dotenv').config();
+
+
 const projectsRouter = require('./routes/project.js');
 const loginController = require('./controller/loginController.js');
 const registerController = require('./controller/registerController.js');
 const corsOptions = require('./config/corsOptions.js');
 const logs = require('./middleware/logs.js');
 const users = require('./middleware/users.js');
-
-app.set('trust proxy', true);
-require('dotenv').config();
 
 
 const PORT = process.env.PORT || 5000;
