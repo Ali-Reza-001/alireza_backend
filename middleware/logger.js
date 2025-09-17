@@ -13,6 +13,8 @@ const logger = (req, res, next) => {
     userAgent: req.headers['user-agent']
   };
 
+  // console.log(logEntry)
+
   const logLine = JSON.stringify(logEntry) + '\n';
 
   // Ensure the directory exists

@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   ip: { type: String, required: true },
   emailVerified: { type: Boolean, default: false },
   refresh: { type: Array, required: true },
-  role: { type: String, enum: ['user', 'admin'], default: 'user' }
+  role: { type: Array, default: ['user'] }
 });
 
 module.exports = mongoose.model('User', userSchema);

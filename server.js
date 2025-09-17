@@ -10,11 +10,13 @@ require('dotenv').config();
 
 
 const projectsRouter = require('./routes/project.js');
+const refresh = require('./routes/refresh.js');
 const loginController = require('./controller/loginController.js');
 const registerController = require('./controller/registerController.js');
 const corsOptions = require('./config/corsOptions.js');
 const logs = require('./middleware/logs.js');
 const users = require('./middleware/users.js');
+const verifyUser = require('./middleware/verifyUser.js');
 
 
 const PORT = process.env.PORT || 5000;
@@ -37,6 +39,9 @@ app.get('/', (req, res) => {
   }
 });
 
+app.get('/health', (req, res) => {
+  res.send('Backend is alive 🔥');
+});
 
 
 // Register
@@ -45,15 +50,18 @@ app.post('/register', registerController);
 // Login
 app.post('/login', loginController);
 
+app.use('/auth/refresh', refresh);
+
+// Protected Routes
+app.use((req, res, next) => verifyUser(req, res ,next));
+
+app.get('/admin', (req, res) => {res.send('allowed')})
+
 app.use('/api/project', projectsRouter);
 
 app.get('/api/logs', logs);
 
 app.get('/api/users', users);
-
-app.get('/health', (req, res) => {
-  res.send('Backend is alive 🔥');
-});
 
 
 async function connectDB() {
