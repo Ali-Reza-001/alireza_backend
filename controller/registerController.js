@@ -2,6 +2,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../model/User');
+const roles = require('../config/roles');
 
 const JWT_ACCESS_TOKEN = process.env.JWT_ACCESS_TOKEN;
 const JWT_REFRESH_TOKEN = process.env.JWT_REFRESH_TOKEN;
@@ -25,9 +26,14 @@ const registerController = async (req, res) => {
   const foundUser = await User.findOne({email});
   if (foundUser) return res.status(409).send({message: 'Email is already in system.'});
 
+  const userInfo = {
+    role: [roles.User],
+    email
+  }
+
   const hashed = await bcrypt.hash(password, 10);
-  const accessToken = jwt.sign({ email }, JWT_ACCESS_TOKEN, { expiresIn: '15m' });
-  const refreshToken = jwt.sign({ email }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
+  const accessToken = jwt.sign({ userInfo }, JWT_ACCESS_TOKEN, { expiresIn: '15m' });
+  const refreshToken = jwt.sign({ userInfo }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
 
   const user = new User({ username, email, password: hashed, ip, refresh: refreshToken });
   await user.save();

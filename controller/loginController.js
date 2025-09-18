@@ -2,6 +2,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../model/User');
+const roles = require('../config/roles');
 
 const JWT_ACCESS_TOKEN = process.env.JWT_ACCESS_TOKEN;
 const JWT_REFRESH_TOKEN = process.env.JWT_REFRESH_TOKEN;
@@ -21,8 +22,13 @@ const loginController = async (req, res) => {
   const match = await bcrypt.compare(password, user.password);
   if (!match) return res.status(401).json({ message: 'Password is wrong' });
 
-  const accessToken = jwt.sign({ email }, JWT_ACCESS_TOKEN, { expiresIn: '15m' });
-  const refreshToken = jwt.sign({ email }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
+  const userInfo = {
+    role: [roles.User],
+    email
+  }
+
+  const accessToken = jwt.sign({ userInfo }, JWT_ACCESS_TOKEN, { expiresIn: '15s' });
+  const refreshToken = jwt.sign({ userInfo }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,

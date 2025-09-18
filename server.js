@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const logger = require('./middleware/logger')
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 
 app.set('trust proxy', true);
@@ -10,13 +11,15 @@ require('dotenv').config();
 
 
 const projectsRouter = require('./routes/project.js');
-const refresh = require('./routes/refresh.js');
+const refreshController = require('./controller/refreshController');
 const loginController = require('./controller/loginController.js');
 const registerController = require('./controller/registerController.js');
 const corsOptions = require('./config/corsOptions.js');
 const logs = require('./middleware/logs.js');
 const users = require('./middleware/users.js');
 const verifyUser = require('./middleware/verifyUser.js');
+const verifyRole = require('./middleware/verifyRole.js');
+const roles = require('./config/roles.js');
 
 
 const PORT = process.env.PORT || 5000;
@@ -24,6 +27,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors(corsOptions));
 app.options('/{*splat}', cors(corsOptions)); // Handles preflight
 app.use(express.json());
+app.use(cookieParser());
 
 app.use((req, res, next) => logger(req, res, next));
 
@@ -50,12 +54,12 @@ app.post('/register', registerController);
 // Login
 app.post('/login', loginController);
 
-app.use('/auth/refresh', refresh);
+app.get('/auth/refresh', refreshController);
 
 // Protected Routes
-app.use((req, res, next) => verifyUser(req, res ,next));
+app.use('/api',verifyUser);
 
-app.get('/admin', (req, res) => {res.send('allowed')})
+app.get('/api/admin', verifyRole(roles.Admin),(req, res) => {res.send(req.userInfo.role)})
 
 app.use('/api/project', projectsRouter);
 

@@ -5,4 +5,4 @@ const roles = {
     User: 9009,
 }
 
-export default roles;
+module.exports = roles;
