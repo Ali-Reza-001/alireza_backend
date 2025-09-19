@@ -9,7 +9,6 @@ const JWT_REFRESH_TOKEN = process.env.JWT_REFRESH_TOKEN;
 
 const refreshController = async (req, res, next) => {
     const old_refresh = req.cookies.refreshToken;
-    console.log(old_refresh);
     res.clearCookie('refreshToken', {
         httpOnly: true,
         secure: true,
@@ -22,15 +21,13 @@ const refreshController = async (req, res, next) => {
             return res.status(403).send({ message: 'Refreshtoken failed.' });
         }
 
-        const userInfo = decoded.userInfo;
-        const email = userInfo.email;
+        const email = decoded.email;
 
         const foundUser = await User.findOne({email});
-        console.log(foundUser);
         if (!foundUser) return res.send({message: 'This is a Hacked user.'});
 
-        const accessToken = jwt.sign({ userInfo }, JWT_ACCESS_TOKEN, { expiresIn: '15s' });
-        const refreshToken = jwt.sign({ userInfo }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
+        const accessToken = jwt.sign({ email }, JWT_ACCESS_TOKEN, { expiresIn: '15m' });
+        const refreshToken = jwt.sign({ email }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
@@ -40,9 +37,7 @@ const refreshController = async (req, res, next) => {
         });
 
         res.json({ message: 'RefreshToken Succeed.', accessToken });
-
         next();
-
     });
 }
 

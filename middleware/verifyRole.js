@@ -1,19 +1,22 @@
-const jwt = require("jsonwebtoken");
+const User = require("../model/User");
 
 const verifyRole = (...allowedRoles) => {
-  return (req, res, next) => {
-    const userRoles = req.userInfo.role || [];
+  return async (req, res, next) => {
+    const email = req.email;
+    console.log(email)
+
+    const foundUser = await User.findOne({email});
+    const userRoles = foundUser.role;
 
     const hasRole = userRoles.some(role => allowedRoles.includes(role));
     console.log('Matched role:', hasRole, 'Allowed:', allowedRoles, 'User:', userRoles);
 
     if (!hasRole) {
-        return res.status(403).json({ message: 'You are not admin.' });
+      return res.status(403).json({ message: 'You are not admin.' });
     } else {
-        return res.status(200).json({ role: userRoles });
+      next();
     }
 
-    next();
   };
 };
 

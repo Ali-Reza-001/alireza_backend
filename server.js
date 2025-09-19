@@ -59,7 +59,7 @@ app.get('/auth/refresh', refreshController);
 // Protected Routes
 app.use('/api',verifyUser);
 
-app.get('/api/admin', verifyRole(roles.Admin),(req, res) => {res.send(req.userInfo.role)})
+app.get('/api/admin', verifyRole(roles.Admin),(req, res) => {res.json({message: 'You are the admin.'})})
 
 app.use('/api/project', projectsRouter);
 

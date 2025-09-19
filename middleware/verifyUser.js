@@ -1,8 +1,10 @@
 const jwt = require("jsonwebtoken");
+const User = require("../model/User");
 
 const JWT_ACCESS_TOKEN = process.env.JWT_ACCESS_TOKEN;
+const JWT_REFRESH_TOKEN = process.env.JWT_REFRESH_TOKEN;
 
-const verifyUser = (req, res, next) => {
+const verifyUser = async (req, res, next) => {
     const authHeader = req.headers['authorization'] || req.headers['Authorization'];
     const accessToken = authHeader?.split(' ')[1];
     if (!accessToken) return res.status(403).json({message: 'You are not allowed.'});
@@ -12,7 +14,7 @@ const verifyUser = (req, res, next) => {
             return res.status(403).json({ message: 'Access token failed' });
         }
 
-        req.userInfo = decoded.userInfo;
+        req.email = decoded.email;
 
         next();
     });
