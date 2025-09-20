@@ -19,6 +19,7 @@ const logs = require('./middleware/logs.js');
 const users = require('./middleware/users.js');
 const verifyUser = require('./middleware/verifyUser.js');
 const verifyRole = require('./middleware/verifyRole.js');
+const verifyEmail = require('./middleware/verifyEmail.js');
 const roles = require('./config/roles.js');
 
 
@@ -50,6 +51,9 @@ app.get('/health', (req, res) => {
 
 // Register
 app.post('/register', registerController);
+
+// Email Verification
+app.get('/verify', verifyEmail);
 
 // Login
 app.post('/login', loginController);

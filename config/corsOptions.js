@@ -1,6 +1,8 @@
+const DOMAIN = require('./DOMAIN');
 
 const allowedOrigins = [
-  'https://ali-reza.dev',
+  DOMAIN.original,
+  DOMAIN.BackEnd,
   'https://www.ali-reza.dev',
   'http://localhost:5173',
 ];

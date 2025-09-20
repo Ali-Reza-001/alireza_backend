@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   ip: { type: String, required: true },
   emailVerified: { type: Boolean, default: false },
-  refresh: { type: Array, required: true },
+  refresh: { type: Array },
   role: { type: Array, default: [9009] }
 },{ timestamps: true });
 

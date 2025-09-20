@@ -18,6 +18,7 @@ const loginController = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) return res.status(401).json({ message: 'You are not signed in.' });
+  if (!user.emailVerified) return res.status(401).json({ message: 'Your email is not verified yet.' });
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) return res.status(401).json({ message: 'Password is wrong' });

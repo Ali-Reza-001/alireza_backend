@@ -2,10 +2,12 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../model/User');
+const sendVerificationEmail = require('../utils/emailVerifier');
 const roles = require('../config/roles');
 
 const JWT_ACCESS_TOKEN = process.env.JWT_ACCESS_TOKEN;
 const JWT_REFRESH_TOKEN = process.env.JWT_REFRESH_TOKEN;
+const JWT_EMAIL_TOKEN = process.env.JWT_EMAIL_TOKEN;
 
 const registerController = async (req, res) => {
 
@@ -27,22 +29,16 @@ const registerController = async (req, res) => {
   if (foundUser) return res.status(409).send({message: 'Email is already in system.'});
 
   const hashed = await bcrypt.hash(password, 10);
-  const accessToken = jwt.sign({ email }, JWT_ACCESS_TOKEN, { expiresIn: '15m' });
-  const refreshToken = jwt.sign({ email }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
 
-  const user = new User({ username, email, password: hashed, ip, refresh: refreshToken });
+  const user = new User({ username, email, password: hashed, ip });
   await user.save();
 
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'None',
-    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-  });
+  const emailToken = jwt.sign({userId: user._id}, JWT_EMAIL_TOKEN, {expiresIn: '1d'});
+
+  sendVerificationEmail(email, emailToken)
 
   res.status(201).json({
-    message: 'User registered successfully !',
-    accessToken
+    message: ' User registered successfully. ',
   });
 }
 
