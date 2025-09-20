@@ -1,4 +1,3 @@
-
 const express = require('express');
 const app = express();
 const logger = require('./middleware/logger')
@@ -8,9 +7,10 @@ const mongoose = require('mongoose');
 
 app.set('trust proxy', true);
 require('dotenv').config();
-
+const PORT = process.env.PORT || 5000;
 
 const projectsRouter = require('./routes/project.js');
+const usersControl = require('./routes/usersControl.js');
 const refreshController = require('./controller/refreshController');
 const loginController = require('./controller/loginController.js');
 const registerController = require('./controller/registerController.js');
@@ -22,19 +22,13 @@ const verifyRole = require('./middleware/verifyRole.js');
 const verifyEmail = require('./middleware/verifyEmail.js');
 const roles = require('./config/roles.js');
 
-
-const PORT = process.env.PORT || 5000;
-
 app.use(cors(corsOptions));
 app.options('/{*splat}', cors(corsOptions)); // Handles preflight
 app.use(express.json());
 app.use(cookieParser());
-
-app.use((req, res, next) => logger(req, res, next));
-
-
 connectDB();
 
+app.use(logger);
 
 app.get('/', (req, res) => {
   if (req.headers.accept?.includes('text/html')) {
@@ -70,6 +64,8 @@ app.use('/api/project', projectsRouter);
 app.get('/api/logs', logs);
 
 app.get('/api/users', users);
+
+app.use('/api/usersControl', usersControl);
 
 
 async function connectDB() {
