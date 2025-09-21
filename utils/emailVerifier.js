@@ -1,6 +1,6 @@
 
 const nodemailer = require('nodemailer');
-const DOMAIN = require('../config/DOMAIN.js');
+const DOMAIN = require('../config/DOMAIN');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.mail.yahoo.com',
@@ -25,7 +25,7 @@ const sendVerificationEmail = async (email, token) => {
       <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border:10px solid #000;">
         <tr>
           <td align="center" style="padding:20px;">
-            <img src="https://ali-reza.dev/logo.png" width="150" alt="Logo" style="display:block; margin-bottom:30px;background-color:#000" />
+            <img src="https://ali-reza.dev/favicon.png" width="150" alt="Logo" style="display:block; margin-bottom:30px" />
             <p style="font-size:16px; color:#333; font-family:Arial, sans-serif; line-height:1.5;">
               Hello my friend,<br><br>
               This is a verification email. Click the button below to verify your email:

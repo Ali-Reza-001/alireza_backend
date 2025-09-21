@@ -12,7 +12,8 @@ const JWT_EMAIL_TOKEN = process.env.JWT_EMAIL_TOKEN;
 const registerController = async (req, res) => {
 
   const { username, email, password } = req.body;
-  const ip = req.ip;
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
+
 
   // Allow letters, numbers, and common symbols. Reject if it contains < > " '
   const isSafePassword = /^[^\s<>"']{8,64}$/;
