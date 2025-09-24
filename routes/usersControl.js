@@ -4,12 +4,10 @@ const router = express.Router();
 
 const roles = require('../config/roles');
 const verifyRole = require('../middleware/verifyRole');
-const {deleteUser} = require('../controller/usersController');
+const {deleteUser, getUser} = require('../controller/usersController');
 
 // GET all projects
-router.get('/', async (req, res) => {
-  res.json({message: 'Blank'});
-});
+router.get('/:id', verifyRole(roles.Admin), getUser);
 
 // POST a new project
 router.post('/', async (req, res) => {
