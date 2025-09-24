@@ -15,7 +15,7 @@ const loginController = async (req, res) => {
     sameSite: 'None'
   });
 
-  const { email, password } = req.body;
+  const { email, password, constUser } = req.body;
   const user = await User.findOne({ email });
   if (!user) return res.status(401).json({ message: 'You are not signed in.' });
   if (!user.emailVerified) return res.status(401).json({ message: 'Your email is not verified yet.' });
@@ -24,14 +24,17 @@ const loginController = async (req, res) => {
   if (!match) return res.status(401).json({ message: 'Password is wrong' });
 
   const accessToken = jwt.sign({ email }, JWT_ACCESS_TOKEN, { expiresIn: '15m' });
-  const refreshToken = jwt.sign({ email }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
 
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'None',
-    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-  });
+  if (Boolean(constUser)) {
+    const refreshToken = jwt.sign({ email }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+  }
 
   res.json({ message: 'User successfully logged in.', accessToken });
 }

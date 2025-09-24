@@ -29,6 +29,15 @@ const refreshController = async (req, res, next) => {
         const accessToken = jwt.sign({ email }, JWT_ACCESS_TOKEN, { expiresIn: '15m' });
         const refreshToken = jwt.sign({ email }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
 
+        const index = foundUser.refresh.indexOf(old_refresh);
+        if (index !== -1) {
+            foundUser.refresh[index] = refreshToken;
+            await foundUser.save();
+        } else {
+            foundUser.refresh.push(refreshToken);
+            await foundUser.save();
+        }
+
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: true,
