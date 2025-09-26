@@ -63,8 +63,6 @@ app.use('/api/project', projectsRouter);
 
 app.get('/api/logs', logs);
 
-app.get('/api/users', users);
-
 app.use('/api/usersControl', usersControl);
 
 
