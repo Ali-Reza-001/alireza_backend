@@ -7,7 +7,7 @@ const verifyRole = require('../middleware/verifyRole');
 const {deleteUser, getUser, getAllUsers} = require('../controller/usersController');
 
 // GET all Users
-router.get('/:id', verifyRole(roles.Admin), getUser);
+router.get('/:id', verifyRole(roles.Admin, roles.User), getUser);
 
 // GET a User
 router.get('/', verifyRole(roles.Admin), getAllUsers);
