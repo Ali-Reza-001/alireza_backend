@@ -7,10 +7,20 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUser =  async (req, res) => {
-    const {id} = req.params;
-    console.log(id);
-    const data = await User.findOne({_id : id});
-    res.json(data);
+    let {id} = req.params;
+    if (id === 'undefined') {
+        const foundUser = await User.findOne({email: req.email});
+        if (!foundUser) return res.send({message: 'This is a Hacked user.'});
+        const username = foundUser.username;
+        const email = foundUser.email;
+        const userProfilePic = foundUser.userProfilePic;
+        const data = {username, email, userProfilePic};
+        return res.json(data);
+    } else {
+        console.log(id);
+        const data = await User.findOne({_id : id});
+        res.json(data);
+    }
 }
 
 const deleteUser =  async (req, res) => {

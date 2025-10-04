@@ -7,7 +7,7 @@ const roles = require('../config/roles');
 const JWT_ACCESS_TOKEN = process.env.JWT_ACCESS_TOKEN;
 const JWT_REFRESH_TOKEN = process.env.JWT_REFRESH_TOKEN;
 
-const refreshController = async (req, res, next) => {
+const refreshController = async (req, res) => {
     const old_refresh = req.cookies.refreshToken;
     res.clearCookie('refreshToken', {
         httpOnly: true,
@@ -46,7 +46,6 @@ const refreshController = async (req, res, next) => {
         });
 
         res.json({ message: 'RefreshToken Succeed.', accessToken });
-        next();
     });
 }
 

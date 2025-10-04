@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  ip: { type: String, required: true },
+  userProfilePic: { type: String },
   ipInfo: { type: Object },
   emailVerified: { type: Boolean, default: false },
   refresh: { type: Array },

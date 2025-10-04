@@ -16,11 +16,11 @@ const loginController = require('./controller/loginController.js');
 const registerController = require('./controller/registerController.js');
 const corsOptions = require('./config/corsOptions.js');
 const logs = require('./middleware/logs.js');
-const users = require('./middleware/users.js');
 const verifyUser = require('./middleware/verifyUser.js');
 const verifyRole = require('./middleware/verifyRole.js');
 const verifyEmail = require('./middleware/verifyEmail.js');
 const roles = require('./config/roles.js');
+const profilePic = require('./middleware/profilePic.js');
 
 app.use(cors(corsOptions));
 app.options('/{*splat}', cors(corsOptions)); // Handles preflight
@@ -57,6 +57,9 @@ app.get('/auth/refresh', refreshController);
 // Protected Routes
 app.use('/api',verifyUser);
 
+// Controlling the user's picture upload
+app.post('/api/upload-profile-pic', profilePic);
+
 app.get('/api/admin', verifyRole(roles.Admin),(req, res) => {res.json({message: 'You are the admin.'})})
 
 app.use('/api/project', projectsRouter);
@@ -64,6 +67,13 @@ app.use('/api/project', projectsRouter);
 app.get('/api/logs', logs);
 
 app.use('/api/usersControl', usersControl);
+
+// 404 handler
+app.use((req, res) => {
+  console.log(req.originalUrl);
+  res.status(404).json({ message: 'Route not found' });
+});
+
 
 
 async function connectDB() {
