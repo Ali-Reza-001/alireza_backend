@@ -30,6 +30,7 @@ const upload = multer({ storage, fileFilter });
 
 const profilePic = (req, res, next) => {
   upload.single('selectedFile')(req, res, async (err) => {
+    console.log('Request File:', "req.file : "+req.file,"err : "+err,"req.body : "+req.body, );
     if (err) return res.status(400).json({ error: err.message });
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 

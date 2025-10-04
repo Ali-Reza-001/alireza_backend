@@ -38,9 +38,7 @@ app.get('/', (req, res) => {
   }
 });
 
-app.get('/health', (req, res) => {
-  res.send('Backend is alive 🔥');
-});
+app.get('/health', (req, res) => {res.send('Backend is alive 🔥')});
 
 
 // Register
@@ -55,7 +53,7 @@ app.post('/login', loginController);
 app.get('/auth/refresh', refreshController);
 
 // Protected Routes
-app.use('/api',verifyUser);
+app.use('/api', verifyUser);
 
 // Controlling the user's picture upload
 app.post('/api/upload-profile-pic', profilePic);
