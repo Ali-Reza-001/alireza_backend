@@ -16,6 +16,7 @@ const loginController = async (req, res) => {
   });
 
   const { email, password, constUser } = req.body;
+  console.log(email, password, constUser);
   const user = await User.findOne({ email });
   if (!user) return res.status(401).json({ message: 'You are not signed in.' });
   if (!user.emailVerified) return res.status(401).json({ message: 'Your email is not verified yet.' });
@@ -27,6 +28,7 @@ const loginController = async (req, res) => {
 
   if (Boolean(constUser)) {
     const refreshToken = jwt.sign({ email }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
+    console.log('The user is a const user');
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
