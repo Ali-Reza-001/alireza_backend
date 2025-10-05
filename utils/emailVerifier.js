@@ -4,8 +4,8 @@ const DOMAIN = require('../config/DOMAIN');
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.mail.yahoo.com',
-  port: 465,
-  secure: true, // true for port 465, false for 587
+  port: 587,
+  secure: false, // true for port 465, false for 587
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -19,7 +19,7 @@ const sendVerificationEmail = async (email, token) => {
 
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
-    to: email,
+    replyTo: email,
     subject: 'Verify your email',
     html: `
       <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border:10px solid #000;">
