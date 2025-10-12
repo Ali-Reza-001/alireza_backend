@@ -1,25 +1,19 @@
 
-const nodemailer = require('nodemailer');
-const DOMAIN = require('../config/DOMAIN.js');
+module.exports = sendEmail;
+const { Resend } = require('resend');
+const DOMAIN = require('../config/DOMAIN');
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.mail.yahoo.com',
-  port: 465,
-  secure: true, // true for port 465, false for 587
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  }
-});
+const resend = new Resend(process.env.RESEND_API_KEY); 
 
 
 const sendEmail = async (email, content) => {
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
+  await resend.emails.send({
+    from: '<admin@ali-reza.dev>', // Cutomizable sender email
     to: email,
     subject: 'Verify your email',
-    html: content,
+    html: content
   });
 };
+
 
 module.exports = sendEmail;
