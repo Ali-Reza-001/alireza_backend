@@ -1,24 +1,14 @@
-
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 const DOMAIN = require('../config/DOMAIN');
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.mail.yahoo.com',
-  port: 587,
-  secure: false, // true for port 465, false for 587
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  }
-});
-
+const resend = new Resend(process.env.RESEND_API_KEY); 
 
 const sendVerificationEmail = async (email, token) => {
   const verificationLink = `${DOMAIN.original}/resend?verifyToken=${token}`;
-  console.log(verificationLink);
+  console.log('Verification link:', verificationLink);
 
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
+  await resend.emails.send({
+    from: '<admin@ali-reza.dev>', // Cutomizable sender email
     to: email,
     subject: 'Verify your email',
     html: `
@@ -39,8 +29,7 @@ const sendVerificationEmail = async (email, token) => {
           </td>
         </tr>
       </table>
-
-    `,
+    `
   });
 };
 
