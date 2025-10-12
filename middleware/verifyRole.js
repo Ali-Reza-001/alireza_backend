@@ -3,7 +3,6 @@ const User = require("../model/User");
 const verifyRole = (...allowedRoles) => {
   return async (req, res, next) => {
     const email = req.email;
-    console.log(email)
 
     const foundUser = await User.findOne({email});
     const userRoles = foundUser.role;

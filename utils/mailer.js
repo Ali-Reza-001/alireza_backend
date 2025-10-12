@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async (email, content) => {
   await transporter.sendMail({
-    from: `admin@ali-reza.dev`,
+    from: process.env.EMAIL_USER,
     to: email,
     subject: 'Verify your email',
     html: content,

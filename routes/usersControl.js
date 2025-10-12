@@ -4,7 +4,7 @@ const router = express.Router();
 
 const roles = require('../config/roles');
 const verifyRole = require('../middleware/verifyRole');
-const {deleteUser, getUser, getAllUsers} = require('../controller/usersController');
+const {deleteUser, getUser, getAllUsers, updateUser} = require('../controller/usersController');
 
 // GET all Users
 router.get('/:id', verifyRole(roles.Admin, roles.User), getUser);
@@ -18,9 +18,7 @@ router.post('/', async (req, res) => {
 });
 
 // UPDATE a User
-router.put('/', async (req, res) => {
-  res.json({message: 'Blank'});
-});
+router.put('/:id', verifyRole(roles.Admin), updateUser);
 
 // DELETE a User
 router.delete('/', verifyRole(roles.Admin),deleteUser);

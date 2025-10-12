@@ -19,7 +19,7 @@ const sendVerificationEmail = async (email, token) => {
 
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
-    replyTo: email,
+    to: email,
     subject: 'Verify your email',
     html: `
       <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#ffffff; border:10px solid #000;">
