@@ -30,13 +30,13 @@ const loginController = async (req, res) => {
     const refreshToken = jwt.sign({ email }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
     console.log('The user is a const user');
     
-    const index = foundUser.refresh.indexOf(old_refresh);
+    const index = user.refresh.indexOf(old_refresh);
     if (index !== -1) {
-      foundUser.refresh[index] = refreshToken;
-      await foundUser.save();
+      user.refresh[index] = refreshToken;
+      await user.save();
     } else {
-      foundUser.refresh.push(refreshToken);
-      await foundUser.save();
+      user.refresh.push(refreshToken);
+      await user.save();
     }
 
     res.cookie('refreshToken', refreshToken, {
