@@ -8,7 +8,7 @@ const sendVerificationEmail = async (email, token) => {
   console.log('Verification link:', verificationLink);
 
   await resend.emails.send({
-    from: '<admin@ali-reza.dev>', // Cutomizable sender email
+    from: 'admin@ali-reza.dev', // Cutomizable sender email
     to: email,
     subject: 'Verify your email',
     html: `
