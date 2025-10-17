@@ -24,7 +24,18 @@ const refreshController = async (req, res) => {
         const email = decoded.email;
 
         const foundUser = await User.findOne({email});
-        if (!foundUser) return res.send({message: 'This is a Hacked user.'});
+        if (!foundUser) return res.send({message: 'Invalid refresh token or user not found.'});
+        
+        
+        foundUser.refresh = foundUser.refresh.filter(token => {
+            try {
+              jwt.verify(token, JWT_REFRESH_TOKEN);
+              return true;
+            } catch {
+              return false;
+            }
+        });
+        await foundUser.save();
 
         const accessToken = jwt.sign({ email }, JWT_ACCESS_TOKEN, { expiresIn: '15m' });
         const refreshToken = jwt.sign({ email }, JWT_REFRESH_TOKEN, { expiresIn: '7d' });
@@ -32,11 +43,13 @@ const refreshController = async (req, res) => {
         const index = foundUser.refresh.indexOf(old_refresh);
         if (index !== -1) {
             foundUser.refresh[index] = refreshToken;
-            await foundUser.save();
-        } else {
+        } else if (!foundUser.refresh.includes(refreshToken)) {
             foundUser.refresh.push(refreshToken);
-            await foundUser.save();
         }
+        if (foundUser.refresh.length > 5) {
+            foundUser.refresh.shift(); // remove oldest
+        }
+        await foundUser.save();
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,

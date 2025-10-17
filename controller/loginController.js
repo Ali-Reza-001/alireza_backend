@@ -8,7 +8,7 @@ const JWT_ACCESS_TOKEN = process.env.JWT_ACCESS_TOKEN;
 const JWT_REFRESH_TOKEN = process.env.JWT_REFRESH_TOKEN;
 
 const loginController = async (req, res) => {
-  const old_refresh = req.cookie;
+  const old_refresh = req.cookies.refreshToken;
   res.clearCookie('refreshToken', {
     httpOnly: true,
     secure: true,
@@ -16,10 +16,20 @@ const loginController = async (req, res) => {
   });
 
   const { email, password, constUser } = req.body;
-  console.log(email, password, constUser);
   const user = await User.findOne({ email });
+
   if (!user) return res.status(401).json({ message: 'You are not signed in.' });
   if (!user.emailVerified) return res.status(401).json({ message: 'Your email is not verified yet.' });
+  
+  user.refresh = user.refresh.filter(token => {
+    try {
+      jwt.verify(token, JWT_REFRESH_TOKEN);
+      return true;
+    } catch {
+      return false;
+    }
+  });
+  await user.save();
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) return res.status(401).json({ message: 'Password is wrong' });
@@ -33,11 +43,13 @@ const loginController = async (req, res) => {
     const index = user.refresh.indexOf(old_refresh);
     if (index !== -1) {
       user.refresh[index] = refreshToken;
-      await user.save();
-    } else {
+    } else if (!user.refresh.includes(refreshToken)) {
       user.refresh.push(refreshToken);
-      await user.save();
     }
+    if (user.refresh.length > 5) {
+      user.refresh.shift(); // remove oldest
+    }
+    await user.save();
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
