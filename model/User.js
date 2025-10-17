@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema({
   ipInfo: { type: Object },
   emailVerified: { type: Boolean, default: false },
   refresh: { type: Array },
+  isOnline: { type: Boolean, default: false },
+  lastSeen: { type: Date },
   role: { type: Array, default: [9009] }
 },{ timestamps: true });
 

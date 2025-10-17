@@ -3,7 +3,9 @@ const app = express();
 const logger = require('./middleware/logger')
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const http = require('http');
 const mongoose = require('mongoose');
+const { Server } = require('socket.io');
 
 app.set('trust proxy', true);
 require('dotenv').config();
@@ -22,6 +24,9 @@ const verifyEmail = require('./middleware/verifyEmail.js');
 const roles = require('./config/roles.js');
 const profilePic = require('./middleware/profilePic.js');
 const resendEmailVerification = require('./middleware/resendEmailVerification');
+const userOnlineStatus = require('./middleware/userOnlineStatus.js');
+const socketCorsOptions = require('./config/socketCorsOptions.js');
+const redirectRoot = require('./routes/redirectRoot.js');
 
 app.use(cors(corsOptions));
 app.options('/{*splat}', cors(corsOptions)); // Handles preflight
@@ -31,13 +36,12 @@ connectDB();
 
 app.use(logger);
 
-app.get('/', (req, res) => {
-  if (req.headers.accept?.includes('text/html')) {
-    res.redirect('https://ali-reza.dev');
-  } else {
-    res.status(200).send('API root');
-  }
-});
+const server = http.createServer(app); 
+const io = new Server(server, socketCorsOptions);
+
+io.on('connection', userOnlineStatus);
+
+app.get('/', redirectRoot);
 
 app.get('/health', (req, res) => {res.send('Backend is alive 🔥')});
 
@@ -81,7 +85,7 @@ app.use((req, res) => {
 async function connectDB() {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
+    server.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
     console.log('Connected to MongoDB Atlas');
   } catch (err) {
     console.error('Connection error:', err);
