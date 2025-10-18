@@ -29,14 +29,16 @@ const registerController = async (req, res) => {
 
   // Getting the IP information from IPinfo.io API
   const IPinfoToken = process.env.IPINFO_TOKEN;
-  const ipInfo = await 
+  let ipInfo = await 
   fetch(`https://ipinfo.io/${ip}?token=${IPinfoToken}`)
   .then(response => response.json())
   .catch(error => {console.error('Error fetching IP info:', error)});
 
+  if (!ipInfo) {ipInfo = {ip}}
+
   const hashed = await bcrypt.hash(password, 10);
 
-  const user = new User({ username, email, password: hashed, ip, ipInfo });
+  const user = new User({ username, email, password: hashed, ipInfo });
   await user.save();
 
   const emailToken = jwt.sign({userId: user._id}, JWT_EMAIL_TOKEN, {expiresIn: '1d'});

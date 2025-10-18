@@ -27,6 +27,7 @@ const resendEmailVerification = require('./middleware/resendEmailVerification');
 const userOnlineStatus = require('./middleware/userOnlineStatus.js');
 const socketCorsOptions = require('./config/socketCorsOptions.js');
 const redirectRoot = require('./routes/redirectRoot.js');
+const officialEmail = require('./middleware/officialEmail.js');
 
 app.use(cors(corsOptions));
 app.options('/{*splat}', cors(corsOptions)); // Handles preflight
@@ -74,6 +75,8 @@ app.use('/api/project', projectsRouter);
 app.get('/api/logs', logs);
 
 app.use('/api/usersControl', usersControl);
+
+app.use('/api/official-email', officialEmail);
 
 
 // 404 handler

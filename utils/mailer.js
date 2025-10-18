@@ -1,18 +1,20 @@
-
-module.exports = sendEmail;
 const { Resend } = require('resend');
-const DOMAIN = require('../config/DOMAIN');
 
 const resend = new Resend(process.env.RESEND_API_KEY); 
 
+const sendEmail = async ({sender = 'admin@ali-reza.dev', subject, email, content}) => {
+  try {
+    await resend.emails.send({ 
+      from: sender, 
+      to: email, 
+      subject, 
+      html: content 
+    });
+  } catch (error) {
+    console.error('Email send failed:', error);
+    throw error;
+  }
 
-const sendEmail = async (email, content) => {
-  await resend.emails.send({
-    from: '<admin@ali-reza.dev>', // Cutomizable sender email
-    to: email,
-    subject: 'Verify your email',
-    html: content
-  });
 };
 
 
