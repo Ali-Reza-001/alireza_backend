@@ -42,7 +42,13 @@ const updateLog =  async (req, res) => {
 
 const deleteLog =  async (req, res) => {
     const {id} = req.body;
-    console.log(id);
+
+    if(!id) {
+        const data = await Log.deleteMany({});
+        return res.json({message: "Logs deleted successfully !", data});
+    }
+
+    console.log(`Log with id ${id} deleted !`);
     const data = await Log.deleteOne({_id : id});
     res.json({message: "Log deleted successfully !", data});
 }
