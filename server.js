@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 5000;
 
 const projectsRouter = require('./routes/project.js');
 const usersControl = require('./routes/usersControl.js');
+const logsControl = require('./routes/logsControl.js');
 const refreshController = require('./controller/refreshController');
 const loginController = require('./controller/loginController.js');
 const registerController = require('./controller/registerController.js');
@@ -35,44 +36,36 @@ app.use(express.json());
 app.use(cookieParser());
 connectDB();
 
-app.use(logger);
-
 const server = http.createServer(app); 
 const io = new Server(server, socketCorsOptions);
 
 io.on('connection', userOnlineStatus);
 
+app.use(logger);
+
 app.get('/', redirectRoot);
 
-app.get('/health', (req, res) => {res.send('Backend is alive 🔥')});
-
-
-// Register
 app.post('/register', registerController);
 
-// Email Verification
 app.get('/verify', verifyEmail);
 
-// Login
 app.post('/login', loginController);
 
 app.get('/auth/refresh', refreshController);
 
 app.post('/resend-verification', resendEmailVerification);
 
+
 // Protected Routes
 app.use('/api', verifyUser);
 
-app.get('/api/auth/check', (req, res) => {res.json({message: 'You are verified.'})});
-
-// Controlling the user's picture upload
 app.post('/api/upload-profile-pic', profilePic);
 
 app.get('/api/admin', verifyRole(roles.Admin),(req, res) => {res.json({message: 'You are the admin.'})});
 
 app.use('/api/project', projectsRouter);
 
-app.get('/api/logs', logs);
+app.use('/api/logsControl', logsControl);
 
 app.use('/api/usersControl', usersControl);
 

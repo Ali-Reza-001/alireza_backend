@@ -1,30 +1,29 @@
-const fs = require('fs');
-const path = require('path');
+const Log = require('../model/Log');
+const User = require('../model/User');
 
-const logDir = path.join(__dirname, '..', 'data');
-const logFilePath = path.join(logDir, 'logs.jsonl');
+const logger = async (req, res, next) => {
+  const method = req.method;
+  const url = req.originalUrl;
+  const ip = req.ip;
+  const userLogId = req.headers['userlogid'];
 
-const logger = (req, res, next) => {
-  const logEntry = {
-    timestamp: new Date().toISOString(),
-    method: req.method,
-    url: req.originalUrl,
-    ip: req.ip,
-    userAgent: req.headers['user-agent']
-  };
+  const log = await Log.findById(userLogId);
+  if (log) {
 
-  // console.log(logEntry)
+    console.log(`The id ${userLogId} is for the log ${log}`);
 
-  const logLine = JSON.stringify(logEntry) + '\n';
+    const now = Date.now();
+    const timeElapsed = Math.floor((now - log.createdAt.getTime()) / 1000); // in seconds
+    console.log('TimeElapsed' + timeElapsed)
 
-  // Ensure the directory exists
-  if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true });
+    try {
+      log.trip.push({method, url, timeElapsed});
+      await log.save();
+    } catch (err) {
+      console.log(err)
+    }
+
   }
-
-  fs.appendFile(logFilePath, logLine, (err) => {
-    if (err) console.error('Failed to write log:', err);
-  });
 
   next();
 };

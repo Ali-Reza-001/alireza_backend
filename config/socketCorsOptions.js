@@ -1,5 +1,4 @@
-const DOMAIN = require('./DOMAIN');
-
+const DOMAIN = require('./DOMAIN.js');
 
 const socketCorsOptions = {
   cors: {
