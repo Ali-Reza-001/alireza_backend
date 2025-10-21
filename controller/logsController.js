@@ -41,7 +41,7 @@ const updateLog =  async (req, res) => {
 }
 
 const deleteLog =  async (req, res) => {
-    const {id} = req.body;
+    const id = req.body?.id;
 
     if(!id) {
         const data = await Log.deleteMany({});
