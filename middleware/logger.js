@@ -7,6 +7,11 @@ const logger = async (req, res, next) => {
   const ip = req.ip;
   const userLogId = req.headers['userlogid'];
 
+  if (ip === '::1' || ip === '127.0.0.1') {
+    console.log('Localhost access - skipping log');
+    return next();
+  }
+
   const log = await Log.findById(userLogId);
   if (log) {
 
@@ -23,6 +28,8 @@ const logger = async (req, res, next) => {
       console.log(err)
     }
 
+  } else {
+    console.log(`User with ip ${ip} and log ID ${userLogId} has a wrong log ID.`)
   }
 
   next();

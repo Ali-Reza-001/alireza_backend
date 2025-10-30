@@ -33,7 +33,7 @@ const profilePic = (req, res, next) => {
       console.log('ImageKit upload response:', response);
 
       const user = await User.findOne({ email: req.email });
-      user.userProfilePic = `${response.url}?tr=w-512,h-512,f-webp`;
+      user.userProfilePic = `${response.url}`;
       await user.save();
 
       res.status(200).json({

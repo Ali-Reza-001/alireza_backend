@@ -12,6 +12,10 @@ const userOnlineStatus = (socket) => {
 
         console.log('User is ' + user);
 
+        if(user === '127.0.0.1' || user === '::1' || user === 'admin@admin.admin') {
+            return;
+        }
+
         try {
             const log = new Log({user, device, trip: [{method: 'GET', url: '/', timeElapsed: 0}]});
             await log.save();

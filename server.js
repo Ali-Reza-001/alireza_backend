@@ -14,11 +14,11 @@ const PORT = process.env.PORT || 5000;
 const projectsRouter = require('./routes/project.js');
 const usersControl = require('./routes/usersControl.js');
 const logsControl = require('./routes/logsControl.js');
+const blogsControl = require('./routes/blogsControl.js');
 const refreshController = require('./controller/refreshController');
 const loginController = require('./controller/loginController.js');
 const registerController = require('./controller/registerController.js');
 const corsOptions = require('./config/corsOptions.js');
-const logs = require('./middleware/logs.js');
 const verifyUser = require('./middleware/verifyUser.js');
 const verifyRole = require('./middleware/verifyRole.js');
 const verifyEmail = require('./middleware/verifyEmail.js');
@@ -29,6 +29,8 @@ const userOnlineStatus = require('./middleware/userOnlineStatus.js');
 const socketCorsOptions = require('./config/socketCorsOptions.js');
 const redirectRoot = require('./routes/redirectRoot.js');
 const officialEmail = require('./middleware/officialEmail.js');
+const uploadBlog = require('./middleware/uploadBlog.js');
+const blogUserData = require('./middleware/blogUserData.js');
 
 app.use(cors(corsOptions));
 app.options('/{*splat}', cors(corsOptions)); // Handles preflight
@@ -55,11 +57,17 @@ app.get('/auth/refresh', refreshController);
 
 app.post('/resend-verification', resendEmailVerification);
 
+app.get('/blog-user-data/:id', blogUserData);
+
 
 // Protected Routes
 app.use('/api', verifyUser);
 
 app.post('/api/upload-profile-pic', profilePic);
+
+app.post('/api/upload-blog', uploadBlog);
+
+app.use('/api/blogsControl', blogsControl);
 
 app.get('/api/admin', verifyRole(roles.Admin),(req, res) => {res.json({message: 'You are the admin.'})});
 

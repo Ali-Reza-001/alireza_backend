@@ -8,7 +8,7 @@ const sendEmail = async ({sender = 'admin@ali-reza.dev', subject, email, content
       from: sender, 
       to: email, 
       subject, 
-      html: content 
+      html: `<pre>${content}</pre>` 
     });
   } catch (error) {
     console.error('Email send failed:', error);
