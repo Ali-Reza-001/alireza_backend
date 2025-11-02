@@ -1,14 +1,9 @@
 const mongoose = require('mongoose');
 
 const logSchema = new mongoose.Schema({
-  user: { type: String, required: true },
-  trip: [
-    {
-      method: String,
-      url: String,
-      timeElapsed: Number
-    }
-  ],
+  ip: { type: String, required: true },
+  method: { type: String, required: true },
+  url: { type: String, required: true },
   device: { type: String, required: true },
 },{ timestamps: true });
 
