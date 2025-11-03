@@ -9,6 +9,7 @@ const { Server } = require('socket.io');
 
 app.set('trust proxy', true);
 require('dotenv').config();
+
 const PORT = process.env.PORT || 5000;
 
 const projectsRouter = require('./routes/project.js');
